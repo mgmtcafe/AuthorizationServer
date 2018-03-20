@@ -1,0 +1,9 @@
+com\oauthjwt\OauthJwtApplication.class
+com\oauthjwt\security\CustomUser.class
+com\oauthjwt\dao\UserDAO$Authorities.class
+com\oauthjwt\security\CustomDetailsService.class
+com\oauthjwt\security\SecurityConfiguration.class
+com\oauthjwt\config\HibernateConfig.class
+com\oauthjwt\security\OAuth2Config.class
+com\oauthjwt\model\UserModel.class
+com\oauthjwt\dao\UserDAO.class
