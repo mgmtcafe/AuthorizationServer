@@ -13,7 +13,7 @@ eureka:
     port: 8761
   client:
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+      defaultZone: https://eureka-micro.herokuapp.com/eureka/
       
 security:
   basic:
