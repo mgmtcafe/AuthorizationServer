@@ -8,10 +8,10 @@ server:
   
 eureka:
   instance:
-    hostname: eureka-micro.herokuapp.com
+    hostname: eureka-client-micro.herokuapp.com
   client:
     serviceUrl:
-      defaultZone: https://eureka-micro.herokuapp.com/eureka/
+      defaultZone: https://user:password@eureka-micro.herokuapp.com/eureka/
       
 security:
   basic:
