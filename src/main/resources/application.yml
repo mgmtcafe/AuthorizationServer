@@ -3,14 +3,12 @@ spring:
     name: uaa-service
     
 server:
-  port: 8080
   context-path: /uaa
   use-forward-headers: false
   
 eureka:
   instance:
-    hostname: localhost
-    port: 8761
+    hostname: eureka-micro.herokuapp.com
   client:
     serviceUrl:
       defaultZone: https://eureka-micro.herokuapp.com/eureka/
