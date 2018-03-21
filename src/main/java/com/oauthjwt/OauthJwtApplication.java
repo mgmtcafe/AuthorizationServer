@@ -6,10 +6,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.oauthjwt.dao.UserDAO;
@@ -50,6 +54,17 @@ public class OauthJwtApplication extends WebMvcConfigurerAdapter{
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/oauth/confirm_access").setViewName("authorize");
     }
+	
+	 @Bean
+	    public WebMvcConfigurer corsConfigurer() {
+	        return new WebMvcConfigurerAdapter() {
+	            @Override
+	            public void addCorsMappings(CorsRegistry registry) {
+	                registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
+	                        .allowedHeaders("*");
+	            }
+	        };
+	    }
 	
 	
 	@RequestMapping("/user/me")
