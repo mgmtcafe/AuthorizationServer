@@ -2,6 +2,10 @@ package com.oauthjwt.security;
 
 import java.security.KeyPair;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +20,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.view.RedirectView;
 
 @EnableAuthorizationServer
 @Configuration
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
-	private String clientId = "client";
+	private String clientId = "web-app";
 	private String clientSecret = "secret";
 
 	@Autowired
@@ -43,9 +50,28 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	}
 
 	@Override
-	public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
 				.accessTokenConverter(tokenEnhancer());
+		
+		endpoints.addInterceptor(new HandlerInterceptorAdapter() {
+			@Override
+			public void postHandle(HttpServletRequest request,
+					HttpServletResponse response, Object handler,
+					ModelAndView modelAndView) throws Exception {
+				if (modelAndView != null
+						&& modelAndView.getView() instanceof RedirectView) {
+					RedirectView redirect = (RedirectView) modelAndView.getView();
+					String url = redirect.getUrl();
+					if (url.contains("token=") || url.contains("error=")) {
+						HttpSession session = request.getSession(false);
+						if (session != null) {
+							session.invalidate();
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -57,8 +83,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
 		clients.inMemory().withClient(clientId).secret(clientSecret).scopes("read", "write", "openid")
-				.authorizedGrantTypes("password", "refresh_token", "implicit").accessTokenValiditySeconds(120)
-				.refreshTokenValiditySeconds(120);
+				.authorizedGrantTypes("password", "refresh_token","implicit").accessTokenValiditySeconds(20000)
+				.refreshTokenValiditySeconds(20000);
 
 	}
 }
