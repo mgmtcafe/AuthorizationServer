@@ -32,7 +32,7 @@ import org.springframework.web.filter.CorsFilter;
 import com.oauthjwt.dao.UserDAO;
 import com.oauthjwt.model.Signup;
 
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @EnableResourceServer
@@ -73,7 +73,7 @@ public class OauthJwtApplication extends WebMvcConfigurerAdapter{
 	        return bean;
 	    }
 	
-	
+	@CrossOrigin()
 	@RequestMapping("/user/me")
 	public Principal user(Principal user) {
 		return user;
@@ -82,6 +82,7 @@ public class OauthJwtApplication extends WebMvcConfigurerAdapter{
 	@Autowired
 	UserDAO userDao;
 	
+	@CrossOrigin()
 	@PreAuthorize("#oauth2.hasScope('openid') and hasAuthority('ADMIN')")
 	@PostMapping("/createUser")
 	public String createVendor(@RequestBody Map<String, String> user) {
