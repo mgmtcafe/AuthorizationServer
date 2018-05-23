@@ -82,7 +82,7 @@ public class OauthJwtApplication extends WebMvcConfigurerAdapter{
 	@Autowired
 	UserDAO userDao;
 	
-	@CrossOrigin()
+	@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 	@PreAuthorize("#oauth2.hasScope('openid') and hasAuthority('ADMIN')")
 	@PostMapping("/createUser")
 	public String createVendor(@RequestBody Map<String, String> user) {
