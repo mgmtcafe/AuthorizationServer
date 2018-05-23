@@ -73,7 +73,7 @@ public class OauthJwtApplication extends WebMvcConfigurerAdapter{
 	        return bean;
 	    }
 	
-	@CrossOrigin()
+	@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 	@RequestMapping("/user/me")
 	public Principal user(Principal user) {
 		return user;
